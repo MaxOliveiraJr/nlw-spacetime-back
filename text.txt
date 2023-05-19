@@ -1,1 +1,6 @@
+
 npx tsc --init
+
+ prisma init --datasource-provider SQLite
+
+ npx prisma migrate dev
