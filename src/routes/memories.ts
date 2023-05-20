@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma'
 import { z } from 'zod'
 import { rootCertificates } from 'tls'
+import { request } from 'http'
 
 export async function memoriesRoutes(app: FastifyInstance) {
   app.get('/memories', async () => {
@@ -34,7 +35,29 @@ export async function memoriesRoutes(app: FastifyInstance) {
 
     return memory
   })
-  app.post('/memories', async (req, res) => {})
+
+  // corce para comparavel em "true" para true "1" para true
+  app.post('/memories', async (request) => {
+    const bodySchema = z.object({
+      content: z.string(),
+      coverUrl: z.string(),
+      isPublic: z.coerce.boolean().default(false),
+    })
+
+    const { content, coverUrl, isPublic } = bodySchema.parse(request.body)
+
+    const memory = await prisma.memory.create({
+      data: {
+        content,
+        coverUrl,
+        isPublic,
+        userId: '73cb3bd5-fc81-4b08-afd0-def5270b7fb9',
+      },
+    })
+
+    return memory
+  })
+
   app.put('/memories/:id', async (req, res) => {})
   app.delete('/memories/:id', async (req, res) => {})
 }
