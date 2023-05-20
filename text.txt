@@ -6,3 +6,5 @@ npx tsc --init
  npx prisma migrate dev
 
  npx prisma studio
+
+ zod para validação de parametros
